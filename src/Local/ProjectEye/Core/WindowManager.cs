@@ -330,10 +330,11 @@ namespace ProjectEye.Core
                     var window = GetWindowByScreen(name, screen.DeviceName);
                     if (window != null)
                     {
-                        window.Left = screen.Bounds.Left;
-                        window.Top = screen.Bounds.Top;
-                        window.Width = screen.Bounds.Width;
-                        window.Height = screen.Bounds.Height;
+                        var size = GetSize(screen);
+                        window.Left = ToDips(screen.Bounds.Left, size.XDPI);
+                        window.Top = ToDips(screen.Bounds.Top, size.YDPI);
+                        window.Width = size.Width;
+                        window.Height = size.Height;
                     }
                     else
                     {
@@ -376,7 +377,7 @@ namespace ProjectEye.Core
         {
             ScreenExtensions.Dpi dpi = screen.GetDpi(DpiType.Effective);
 
-            return value / (dpiDirection == DpiDirection.X ? dpi.x : dpi.y / 96.0);
+            return value / (dpiDirection == DpiDirection.X ? dpi.x / 96.0 : dpi.y / 96.0);
         }
 
         public static double ToDips(double value, uint dpi)
@@ -389,8 +390,17 @@ namespace ProjectEye.Core
         #region 窗口被关闭event
         private static void window_closed(object sender, EventArgs e)
         {
+            // 窗口已由 Close() 关闭，仅从列表移除，不再调用 Close() 避免递归
             var window = sender as Window;
-            Close(window.Uid);
+            if (window == null)
+            {
+                return;
+            }
+            var toRemove = windowList.Where(m => m.window == window).ToList();
+            foreach (var model in toRemove)
+            {
+                windowList.Remove(model);
+            }
         }
         #endregion
 

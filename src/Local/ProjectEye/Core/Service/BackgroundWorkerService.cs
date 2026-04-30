@@ -44,10 +44,12 @@ namespace ProjectEye.Core.Service
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            for (int i = 0; i < actions.Count; i++)
+            // 复制当前待处理列表，避免遍历时修改原集合导致的跳项
+            var actionsCopy = new List<Action>(actions);
+            actions.Clear();
+            foreach (var action in actionsCopy)
             {
-                actions[i].Invoke();
-                actions.Remove(actions[i]);
+                action.Invoke();
             }
         }
 

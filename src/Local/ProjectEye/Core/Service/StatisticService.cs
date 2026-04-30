@@ -80,7 +80,7 @@ namespace ProjectEye.Core.Service
 
         private void app_Exit(object sender, ExitEventArgs e)
         {
-            Save();
+            SaveSync();
         }
 
         public void Init()
@@ -295,40 +295,63 @@ namespace ProjectEye.Core.Service
 
         #region 数据持久化
         /// <summary>
-        /// 数据持久化
+        /// 数据持久化（异步，通过 BackgroundWorker）
         /// </summary>
         public void Save()
         {
             backgroundWorker.AddAction(() =>
             {
-                try
-                {
-                    if (todayStatistic == null)
-                    {
-                        todayStatistic = FindCreate();
-                    }
-                    if (todayStatistic == null)
-                    {
-                        return;
-                    }
-                    using (var db = new StatisticContext())
-                    {
-                        var item = (from c in db.Statistics where c.Date == todayStatistic.Date select c).FirstOrDefault();
-                        if (item != null)
-                        {
-                            item.ResetTime = todayStatistic.ResetTime;
-                            item.SkipCount = todayStatistic.SkipCount;
-                            item.WorkingTime = todayStatistic.WorkingTime;
-                            db.SaveChanges();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    LogHelper.Error("StatisticService.Save: " + ex.ToString());
-                }
+                SyncSaveToDb();
             });
             backgroundWorker.Run();
+        }
+
+        /// <summary>
+        /// 同步数据持久化，在 app 退出时使用，确保数据写入完成
+        /// </summary>
+        private void SaveSync()
+        {
+            try
+            {
+                SyncSaveToDb();
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error("StatisticService.SaveSync: " + ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 执行实际的数据库写入操作
+        /// </summary>
+        private void SyncSaveToDb()
+        {
+            try
+            {
+                if (todayStatistic == null)
+                {
+                    todayStatistic = FindCreate();
+                }
+                if (todayStatistic == null)
+                {
+                    return;
+                }
+                using (var db = new StatisticContext())
+                {
+                    var item = (from c in db.Statistics where c.Date == todayStatistic.Date select c).FirstOrDefault();
+                    if (item != null)
+                    {
+                        item.ResetTime = todayStatistic.ResetTime;
+                        item.SkipCount = todayStatistic.SkipCount;
+                        item.WorkingTime = todayStatistic.WorkingTime;
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error("StatisticService.SyncSaveToDb: " + ex.ToString());
+            }
         }
         #endregion
 

@@ -29,6 +29,10 @@ namespace ProjectEye.Core.Service
         private int workCount = 0;
         private int restartCount = -1;
         private int refreshTick = 1;
+        /// <summary>
+        /// 防止 Close() 通过 Config_Changed 事件递归调用自身的重入锁
+        /// </summary>
+        private bool isClosing = false;
 
         private Project1UIToast worktoast;
         private Stopwatch timerWatcher;
@@ -302,16 +306,25 @@ namespace ProjectEye.Core.Service
         #region 关闭番茄时钟
         public void Close()
         {
-            workCount = 0;
-            restartCount++;
-            refreshTick = 1;
-            workTimer.Stop();
-            restTimer.Stop();
-            icorefreshTimer.Stop();
-            config.SaveOldOptions();
-            config.options.General.IsTomatoMode = false;
-            config.OnChanged();
-            SaveData();
+            if (isClosing) return;
+            isClosing = true;
+            try
+            {
+                workCount = 0;
+                restartCount++;
+                refreshTick = 1;
+                workTimer.Stop();
+                restTimer.Stop();
+                icorefreshTimer.Stop();
+                config.SaveOldOptions();
+                config.options.General.IsTomatoMode = false;
+                config.OnChanged();
+                SaveData();
+            }
+            finally
+            {
+                isClosing = false;
+            }
         }
         #endregion
 

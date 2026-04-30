@@ -17,25 +17,19 @@ namespace ProjectEye.Core
             try
             {
                 XmlSerializer serializer = new XmlSerializer(type);
-                XmlReader xmlReader = XmlReader.Create(file);
-                if (serializer.CanDeserialize(xmlReader))
+                using (XmlReader xmlReader = XmlReader.Create(file))
                 {
-                    var des = serializer.Deserialize(xmlReader);
-                    xmlReader.Dispose();
-                    return des;
-                }
-                else
-                {
-                    xmlReader.Dispose();
-                    return null;
+                    if (serializer.CanDeserialize(xmlReader))
+                    {
+                        return serializer.Deserialize(xmlReader);
+                    }
                 }
             }
             catch (Exception e)
             {
                 LogHelper.Warning(e.ToString());
-                return null;
             }
-
+            return null;
         }
         public bool Save(object data)
         {
@@ -47,9 +41,10 @@ namespace ProjectEye.Core
                     Directory.CreateDirectory(dir);
                 }
                 XmlSerializer serializer = new XmlSerializer(data.GetType());
-                TextWriter writer = new StreamWriter(file);
-                serializer.Serialize(writer, data);
-                writer.Close();
+                using (TextWriter writer = new StreamWriter(file))
+                {
+                    serializer.Serialize(writer, data);
+                }
                 return true;
             }
             catch (Exception e)
