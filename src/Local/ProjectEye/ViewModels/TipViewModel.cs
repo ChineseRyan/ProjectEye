@@ -210,6 +210,11 @@ namespace ProjectEye.ViewModels
                         imageElement.Opacity = element.Opacity;
                         imageElement.Stretch = Stretch.UniformToFill;
 
+                        if (element.IsBottomLayer)
+                        {
+                            imageElement.SetValue(Grid.ZIndexProperty, -1);
+                        }
+
 
                         try
                         {

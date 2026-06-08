@@ -122,6 +122,7 @@
 
     <sys:String x:Key="Lang_Text">文本</sys:String>
     <sys:String x:Key="Lang_Image">图片</sys:String>
+    <sys:String x:Key="Lang_BottomLayer">置于底层</sys:String>
     <sys:String x:Key="Lang_Button">按钮</sys:String>
     <sys:String x:Key="Lang_AddElement">添加元素</sys:String>
     <sys:String x:Key="Lang_Attribute">属性</sys:String>

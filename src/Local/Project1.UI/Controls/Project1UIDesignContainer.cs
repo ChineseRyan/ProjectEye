@@ -395,6 +395,7 @@ namespace Project1.UI.Controls
                             element.Command = data.Command;
                             break;
                     }
+                    element.IsBottomLayer = data.IsBottomLayer;
                     res.Add(element);
                 }
 
@@ -417,12 +418,16 @@ namespace Project1.UI.Controls
                     itemModel.Width = element.Width;
                     itemModel.Height = element.Height;
                     itemModel.Opacity = element.Opacity;
+                    itemModel.IsBottomLayer = element.IsBottomLayer;
                     controlPoint.X = element.X;
                     controlPoint.Y = element.Y;
                     //分配独有的属性
                     switch (element.Type)
                     {
                         case DesignItemType.Button:
+                            item.ItemType = DesignItemType.Button;
+                            item.ButtonVisibility = Visibility.Visible;
+                            item.FontSizeVisibility = Visibility.Visible;
                             var button = new Project1UIButton();
                             if (element.Style != null)
                             {
@@ -448,11 +453,18 @@ namespace Project1.UI.Controls
                             item.Content = button;
                             break;
                         case DesignItemType.Image:
+                            item.ItemType = DesignItemType.Image;
+                            item.ImageInputVisibility = Visibility.Visible;
+                            item.ImageBottomLayerVisibility = Visibility.Visible;
                             var image = new Image();
                             itemModel.Image = element.Image;
                             item.Content = image;
                             break;
                         case DesignItemType.Text:
+                            item.ItemType = DesignItemType.Text;
+                            item.TextInputVisibility = Visibility.Visible;
+                            item.FontSizeVisibility = Visibility.Visible;
+                            item.TextColorVisibility = Visibility.Visible;
                             var text = new TextBlock();
                             itemModel.Text = element.Text;
                             itemModel.TextColor = element.TextColor;

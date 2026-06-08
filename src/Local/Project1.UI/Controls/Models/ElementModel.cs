@@ -69,6 +69,10 @@ namespace Project1.UI.Controls.Models
         /// 文本对齐方式
         /// </summary>
         public int TextAlignment { get; set; }
+        /// <summary>
+        /// 是否置于底层（仅图片元素生效，作为背景使用）
+        /// </summary>
+        public bool IsBottomLayer { get; set; }
 
     }
 }

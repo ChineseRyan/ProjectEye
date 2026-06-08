@@ -62,6 +62,16 @@ namespace Project1.UI.Controls
             DependencyProperty.Register("ImageInputVisibility", typeof(Visibility), typeof(Project1UIDesignItem), new PropertyMetadata(Visibility.Collapsed));
         #endregion
 
+        #region 置于底层选项可见性
+        public Visibility ImageBottomLayerVisibility
+        {
+            get { return (Visibility)GetValue(ImageBottomLayerVisibilityProperty); }
+            set { SetValue(ImageBottomLayerVisibilityProperty, value); }
+        }
+        public static readonly DependencyProperty ImageBottomLayerVisibilityProperty =
+            DependencyProperty.Register("ImageBottomLayerVisibility", typeof(Visibility), typeof(Project1UIDesignItem), new PropertyMetadata(Visibility.Collapsed));
+        #endregion
+
         #region 属性编辑背景和边宽颜色可见性
         public Visibility ColorVisibility
         {
@@ -263,6 +273,7 @@ namespace Project1.UI.Controls
                     ItemType = DesignItemType.Image;
                     ItemTypeName = "图片";
                     ImageInputVisibility = Visibility.Visible;
+                    ImageBottomLayerVisibility = Visibility.Visible;
                     var image = control as Image;
                     if (image.Source != null)
                     {

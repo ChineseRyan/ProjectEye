@@ -331,5 +331,21 @@ namespace Project1.UI.Controls.Models
         }
         #endregion
 
+        #region 是否置于底层
+        private bool IsBottomLayer_ = false;
+        /// <summary>
+        /// 是否置于底层（仅图片元素生效，作为背景使用）
+        /// </summary>
+        public bool IsBottomLayer
+        {
+            get { return IsBottomLayer_; }
+            set
+            {
+                IsBottomLayer_ = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
     }
 }

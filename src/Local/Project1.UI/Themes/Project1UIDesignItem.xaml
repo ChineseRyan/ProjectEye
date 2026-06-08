@@ -66,6 +66,7 @@
                                                     <RowDefinition Height="*"/>
                                                     <RowDefinition Height="*"/>
                                                     <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="Auto"/>
 
                                                 </Grid.RowDefinitions>
                                                 <TextBlock Text="{DynamicResource Lang_Type}" VerticalAlignment="Center"/>
@@ -296,6 +297,22 @@
                             SelectedValue="{Binding TextAlignment.Value}"
                             SelectedValuePath="Value"
                                                     />
+                                                <!--置于底层（仅图片）-->
+                                                <TextBlock Text="{DynamicResource Lang_BottomLayer}" 
+                                                           Grid.Row="15" 
+                                                           VerticalAlignment="Center" 
+                                                           Margin="0,10,0,0"
+                                                           Visibility="{TemplateBinding ImageBottomLayerVisibility}"/>
+                                                <CheckBox
+                                                    Width="20" 
+                                                    Height="20" 
+                                                    Grid.Column="1" 
+                                                    HorizontalAlignment="Left" 
+                                                    Grid.Row="15"
+                                                    VerticalAlignment="Center"
+                                                    Margin="0,10,0,0"
+                                                    Visibility="{TemplateBinding ImageBottomLayerVisibility}"
+                                                    IsChecked="{Binding IsBottomLayer,Mode=TwoWay}"/>
                                             </Grid>
 
 

@@ -117,6 +117,7 @@
 
     <sys:String x:Key="Lang_Text">Text</sys:String>
     <sys:String x:Key="Lang_Image">Image</sys:String>
+    <sys:String x:Key="Lang_BottomLayer">Send to Back</sys:String>
     <sys:String x:Key="Lang_Button">Button</sys:String>
     <sys:String x:Key="Lang_AddElement">Add Element</sys:String>
     <sys:String x:Key="Lang_Attribute">Attribute</sys:String>
