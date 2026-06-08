@@ -347,6 +347,12 @@
             </Setter.Value>
         </Setter>
 
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsBottomLayer}" Value="True">
+                <Setter Property="Panel.ZIndex" Value="-1"/>
+            </DataTrigger>
+        </Style.Triggers>
+
     </Style>
 
 
