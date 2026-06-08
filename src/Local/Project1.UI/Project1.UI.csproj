@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <UseSharedCompilation>false</UseSharedCompilation>
-    <CscToolPath>D:\新建文件夹 (3)\ProjectEye_NoLeaveListener\ProjectEye\packages\microsoft.net.compilers\3.11.0\tools</CscToolPath>
+    <CscToolPath>..\..\..\packages\microsoft.net.compilers\3.11.0\tools</CscToolPath>
     <CscToolExe>csc.exe</CscToolExe>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
