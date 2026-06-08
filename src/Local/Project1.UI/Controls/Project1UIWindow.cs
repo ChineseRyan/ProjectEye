@@ -283,8 +283,30 @@ namespace Project1.UI.Controls
         //    }
         //    //}
         //}
+        /// <summary>
+        /// 刷新当前窗口所在屏幕的尺寸信息。
+        /// 必须在窗口定位后调用才能获取正确的 ScreenArea，
+        /// 否则会错误地返回主显示器的尺寸。
+        /// </summary>
+        private void RefreshScreenArea()
+        {
+            try
+            {
+                var intPtr = new WindowInteropHelper(this).Handle;
+                var screen = System.Windows.Forms.Screen.FromHandle(intPtr);
+                ScreenArea = screen.Bounds;
+            }
+            catch
+            {
+                // 获取失败时保持现有值
+            }
+        }
+
         private void window_Loaded(object sender, RoutedEventArgs e)
         {
+            // 在窗口完成布局后刷新屏幕尺寸，此时窗口已定位到正确的显示器
+            RefreshScreenArea();
+
             OnSystemButtonsVisibility();
 
             if (IsAnimation)

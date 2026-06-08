@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+  <assemblyIdentity version="1.0.0.0" name="ProjectEye.app"/>
+  
+  <!-- Declare system DPI awareness to prevent Windows from virtualizing DPI.
+       Without this, on Windows 10 1607+ the app runs in DPI-unaware mode where
+       Screen.Bounds returns virtualized coordinates but GetDpiForMonitor returns
+       actual DPI, causing double-scaling in multi-monitor positioning calculations. -->
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <!-- 系统 DPI 感知：WPF 以系统 DPI（主显示器）解释所有坐标 -->
+      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true</dpiAware>
+      <!-- Windows 10 1703+ 推荐声明 -->
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">system</dpiAwareness>
+    </windowsSettings>
+  </application>
+  
+  <!-- Windows 10 compatibility -->
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
+    </application>
+  </compatibility>
+</assembly>

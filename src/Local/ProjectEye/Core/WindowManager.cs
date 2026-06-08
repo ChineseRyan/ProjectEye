@@ -354,15 +354,32 @@ namespace ProjectEye.Core
             public uint YDPI { get; set; }
 
         }
+
+        /// <summary>
+        /// 获取系统 DPI（主显示器的 DPI）。
+        /// WPF 使用系统 DPI 进行窗口定位，所有 DIP 值必须基于系统 DPI
+        /// 才能确保在多显示器不同 DPI 设置下窗口位置和大小正确。
+        /// </summary>
+        private static void GetSystemDpi(out uint xDpi, out uint yDpi)
+        {
+            var primaryScreen = System.Windows.Forms.Screen.PrimaryScreen;
+            ScreenExtensions.Dpi dpi = primaryScreen.GetDpi(DpiType.Effective);
+            xDpi = dpi.x;
+            yDpi = dpi.y;
+        }
+
         public static Size GetSize(System.Windows.Forms.Screen screen)
         {
-            //uint xDpi, yDpi;
-            ScreenExtensions.Dpi dpi = screen.GetDpi(DpiType.Effective);
+            // 使用系统 DPI 而非各显示器自身的 DPI 进行坐标转换。
+            // 因为 WPF 在系统 DPI 感知模式下以系统 DPI 解释所有坐标，
+            // 如果混用不同 DPI 会导致非主显示器上的窗口位置偏移和尺寸错误。
+            uint systemDpiX, systemDpiY;
+            GetSystemDpi(out systemDpiX, out systemDpiY);
             var size = new Size();
-            size.Width = screen.Bounds.Width / (dpi.x / 96.0);
-            size.Height = screen.Bounds.Height / (dpi.y / 96.0);
-            size.XDPI = dpi.x;
-            size.YDPI = dpi.y;
+            size.Width = screen.Bounds.Width / (systemDpiX / 96.0);
+            size.Height = screen.Bounds.Height / (systemDpiY / 96.0);
+            size.XDPI = systemDpiX;
+            size.YDPI = systemDpiY;
             return size;
         }
         #endregion
@@ -375,9 +392,10 @@ namespace ProjectEye.Core
         }
         public static double ToDips(System.Windows.Forms.Screen screen, double value, DpiDirection dpiDirection = DpiDirection.X)
         {
-            ScreenExtensions.Dpi dpi = screen.GetDpi(DpiType.Effective);
-
-            return value / (dpiDirection == DpiDirection.X ? dpi.x / 96.0 : dpi.y / 96.0);
+            uint systemDpiX, systemDpiY;
+            GetSystemDpi(out systemDpiX, out systemDpiY);
+            double dpi = dpiDirection == DpiDirection.X ? systemDpiX : systemDpiY;
+            return value / (dpi / 96.0);
         }
 
         public static double ToDips(double value, uint dpi)

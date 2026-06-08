@@ -61,6 +61,7 @@
     </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\sunglasses.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>

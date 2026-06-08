@@ -22,38 +22,24 @@ namespace ProjectEye.Core
                 var mon = MonitorFromPoint(pnt, 2/*MONITOR_DEFAULTTONEAREST*/);
 
                 Win32APIHelper.RtlGetVersion(out Win32APIHelper.OsVersionInfo osVersionInfo);
-                if (osVersionInfo.MajorVersion != 10)
-                {
-                    var mainWindow = Application.Current?.MainWindow;
-                    if (mainWindow != null)
-                    {
-                        var presentationSource = PresentationSource.FromVisual(mainWindow);
-                        if (presentationSource?.CompositionTarget != null)
-                        {
-                            Matrix m = presentationSource.CompositionTarget.TransformToDevice;
-                            dpi.x = (uint)m.M11 * 96;
-                            dpi.y = (uint)m.M22 * 96;
-                        }
-                        else
-                        {
-                            // 回退默认值
-                            dpi.x = 96;
-                            dpi.y = 96;
-                        }
-                    }
-                    else
-                    {
-                        // MainWindow 未创建时回退
-                        dpi.x = 96;
-                        dpi.y = 96;
-                    }
-                }
-                else
+                // GetDpiForMonitor 从 Windows 8.1 (6.3) 开始可用
+                bool supportsPerMonitorDpi = osVersionInfo.MajorVersion > 6
+                    || (osVersionInfo.MajorVersion == 6 && osVersionInfo.MinorVersion >= 3);
+                if (supportsPerMonitorDpi)
                 {
                     uint dpiX, dpiY;
                     GetDpiForMonitor(mon, dpiType, out dpiX, out dpiY);
                     dpi.x = dpiX;
                     dpi.y = dpiY;
+                }
+                else
+                {
+                    // Windows 7 / 8：所有显示器共享同一 DPI，使用系统 DPI 即可
+                    using (var g = System.Drawing.Graphics.FromHwnd(IntPtr.Zero))
+                    {
+                        dpi.x = (uint)g.DpiX;
+                        dpi.y = (uint)g.DpiY;
+                    }
                 }
             }
             catch (Exception ex)
