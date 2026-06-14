@@ -35,6 +35,10 @@ namespace ProjectEye
             //全局异常捕获（UI 线程）
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
+            // 在任何服务初始化之前提取原生 DLL（SQLite.Interop.dll）
+            // 修复 Costura.Fody 4.0 + Fody 5.0 版本不兼容导致的运行时提取失败
+            Core.NativeLoader.Load();
+
             //重复运行判断
             if (IsRuned())
             {
